@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import type { MouseEvent } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   useAccount,
@@ -93,7 +94,7 @@ function App() {
     }
   }
 
-  function createClickEffect(e: React.MouseEvent) {
+  function createClickEffect(e: MouseEvent<HTMLButtonElement>) {
     if (!popButtonRef.current) return;
 
     const rect = popButtonRef.current.getBoundingClientRect();
@@ -106,16 +107,18 @@ function App() {
       y,
     };
 
-    setClickEffects((prev) => [...prev, effect]);
+    setClickEffects((prev: ClickEffect[]) => [...prev, effect]);
 
     // Remove effect after animation
     setTimeout(() => {
-      setClickEffects((prev) => prev.filter((ef) => ef.id !== effect.id));
+      setClickEffects((prev: ClickEffect[]) =>
+        prev.filter((ef: ClickEffect) => ef.id !== effect.id)
+      );
     }, 1000);
   }
 
-  function registerClick(e: React.MouseEvent) {
-    setLocalClicks((v) => Math.min(v + 1, 200));
+  function registerClick(e: MouseEvent<HTMLButtonElement>) {
+    setLocalClicks((v: number) => Math.min(v + 1, 200));
     createClickEffect(e);
 
     // Show pressed state animation
@@ -137,7 +140,7 @@ function App() {
       if (publicClient && hash) {
         await publicClient.waitForTransactionReceipt({ hash });
       }
-      setLocalClicks((v) => Math.max(v - amount, 0));
+      setLocalClicks((v: number) => Math.max(v - amount, 0));
       scoresQuery.refetch();
     } finally {
       setIsSending(false);
@@ -395,7 +398,7 @@ function App() {
                   }}
                 />
                 {/* Click effects */}
-                {clickEffects.map((effect) => (
+                {clickEffects.map((effect: ClickEffect) => (
                   <div
                     key={effect.id}
                     className="click-effect"
