@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -12,20 +12,28 @@ import { injected, walletConnect } from "wagmi/connectors";
 
 const queryClient = new QueryClient();
 
+const wcProjectId = (
+  import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string | undefined
+)?.trim();
+
 const config = createConfig({
   chains: [monadTestnet],
   connectors: [
     injected(),
-    walletConnect({
-      projectId: "pop-komodo-game",
-      metadata: {
-        name: "Pop Komodo",
-        description: "The ultimate blockchain battle royale game!",
-        url: "https://pop-komodo.com",
-        icons: ["https://pop-komodo.com/icon.png"],
-      },
-      showQrModal: true,
-    }),
+    ...(wcProjectId
+      ? [
+          walletConnect({
+            projectId: wcProjectId,
+            metadata: {
+              name: "Pop Komodo",
+              description: "The ultimate blockchain battle royale game!",
+              url: "https://pop-komodo.com",
+              icons: ["https://pop-komodo.com/icon.png"],
+            },
+            showQrModal: true,
+          }),
+        ]
+      : []),
   ],
   transports: {
     [monadTestnet.id]: http(monadTestnet.rpcUrls.default.http[0]),

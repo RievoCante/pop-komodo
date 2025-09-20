@@ -32,6 +32,19 @@ function App() {
   const [isPressed, setIsPressed] = useState(false);
   const popButtonRef = useRef<HTMLButtonElement>(null);
 
+  // Preload button images so swap is instant in production
+  useEffect(() => {
+    const idle = new Image();
+    idle.src = komodoIdle;
+    const active = new Image();
+    active.src = komodoActive;
+    // Best-effort decode to warm cache; ignore unsupported browsers
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (idle as any).decode?.().catch(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (active as any).decode?.().catch(() => {});
+  }, []);
+
   const getTeamArgs = useMemo(
     () => (address ? ([address] as const) : undefined),
     [address]
@@ -392,6 +405,8 @@ function App() {
                   alt="Pop the Komodo!"
                   className="w-full h-full object-contain pointer-events-none select-none"
                   draggable={false}
+                  loading="eager"
+                  decoding="async"
                   style={{
                     filter: "drop-shadow(0 0 20px rgba(168, 85, 247, 0.6))",
                     transition: "all 0.1s ease",
