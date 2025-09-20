@@ -120,7 +120,7 @@ function App() {
 
     // Show pressed state animation
     setIsPressed(true);
-    setTimeout(() => setIsPressed(false), 200);
+    setTimeout(() => setIsPressed(false), 100);
   }
 
   async function sendPops() {
@@ -375,7 +375,7 @@ function App() {
             <div className="relative mb-6">
               <button
                 ref={popButtonRef}
-                className="pop-button-image w-48 h-48 mx-auto relative disabled:opacity-50"
+                className="pop-button-image w-80 h-80 mx-auto relative disabled:opacity-50"
                 disabled={!isConnected}
                 onClick={registerClick}
                 style={{

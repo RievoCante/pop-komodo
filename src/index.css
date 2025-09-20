@@ -247,8 +247,8 @@ body {
   0% {
     transform: scale(0.95);
   }
-  50% {
-    transform: scale(1.1);
+  30% {
+    transform: scale(1.15);
   }
   100% {
     transform: scale(1);
@@ -641,6 +641,14 @@ body {
   height: 12rem;
 }
 
+.w-80 {
+  width: 20rem;
+}
+
+.h-80 {
+  height: 20rem;
+}
+
 .object-contain {
   object-fit: contain;
 }
@@ -671,8 +679,8 @@ body {
   }
 
   .pop-button-image {
-    width: 10rem;
-    height: 10rem;
+    width: 16rem;
+    height: 16rem;
   }
 
   .glass-card {
