@@ -3,12 +3,15 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import "@rainbow-me/rainbowkit/styles.css";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
-import { WagmiProvider, createConfig } from "wagmi";
+import {
+  RainbowKitProvider,
+  darkTheme,
+  getDefaultConfig,
+} from "@rainbow-me/rainbowkit";
+import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { monadTestnet } from "./lib/monad";
 import { http } from "viem";
-import { injected, walletConnect } from "wagmi/connectors";
 
 const queryClient = new QueryClient();
 
@@ -16,25 +19,10 @@ const wcProjectId = (
   import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string | undefined
 )?.trim();
 
-const config = createConfig({
+const config = getDefaultConfig({
+  appName: "Pop Komodo",
+  projectId: wcProjectId || "demo",
   chains: [monadTestnet],
-  connectors: [
-    injected(),
-    ...(wcProjectId
-      ? [
-          walletConnect({
-            projectId: wcProjectId,
-            metadata: {
-              name: "Pop Komodo",
-              description: "The ultimate blockchain battle royale game!",
-              url: "https://pop-komodo.com",
-              icons: ["https://pop-komodo.com/icon.png"],
-            },
-            showQrModal: true,
-          }),
-        ]
-      : []),
-  ],
   transports: {
     [monadTestnet.id]: http(monadTestnet.rpcUrls.default.http[0]),
   },
