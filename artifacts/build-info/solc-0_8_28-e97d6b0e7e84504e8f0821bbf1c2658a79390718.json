@@ -1,0 +1,39 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-e97d6b0e7e84504e8f0821bbf1c2658a79390718",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/PopKomodo.sol": "project/contracts/PopKomodo.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/PopKomodo.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\n// Simple team-based clicker game state\ncontract PopKomodo {\n    enum Team { Ethereum, Bitcoin, Monad }\n\n    // player => chosen team (0/1/2). Uses Team(uint) casting.\n    mapping(address => Team) private playerTeam;\n    // whether an address has chosen already\n    mapping(address => bool) private hasChosen;\n    // total score contributed by each player (for moderation resets)\n    mapping(address => uint256) private playerScores;\n\n    // scores for teams: index by uint(Team)\n    uint256[3] private teamScores;\n\n    // simple owner pattern for moderation\n    address public owner;\n\n    event TeamChosen(address indexed player, Team team);\n    event Popped(address indexed player, Team team, uint256 newTeamScore);\n    event PoppedBy(address indexed player, Team team, uint32 amount, uint256 newTeamScore);\n    event PlayerReset(address indexed player, Team team, uint256 removed);\n\n    modifier onlyOwner() {\n        require(msg.sender == owner, \"Not owner\");\n        _;\n    }\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    // One-time irreversible team selection\n    function chooseTeam(Team team) external {\n        require(!hasChosen[msg.sender], \"Team already chosen\");\n        require(uint256(team) < 3, \"Invalid team\");\n\n        playerTeam[msg.sender] = team;\n        hasChosen[msg.sender] = true;\n\n        emit TeamChosen(msg.sender, team);\n    }\n\n    // Increment the score for the caller's team\n    function pop() external {\n        require(hasChosen[msg.sender], \"Choose a team first\");\n        Team team = playerTeam[msg.sender];\n\n        uint256 index = uint256(team);\n        playerScores[msg.sender] += 1;\n        uint256 newScore = ++teamScores[index];\n\n        emit Popped(msg.sender, team, newScore);\n    }\n\n    // Batch increment within a capped burst amount\n    function popBy(uint32 amount) external {\n        require(hasChosen[msg.sender], \"Choose a team first\");\n        require(amount > 0, \"Amount must be > 0\");\n\n        Team team = playerTeam[msg.sender];\n        uint256 index = uint256(team);\n        teamScores[index] += amount;\n        playerScores[msg.sender] += amount;\n        uint256 newScore = teamScores[index];\n\n        emit PoppedBy(msg.sender, team, amount, newScore);\n    }\n\n    // Admin moderation: remove all contribution of a player from the team's score\n    function resetPlayer(address player) external onlyOwner {\n        require(hasChosen[player], \"No team\");\n        uint256 contributed = playerScores[player];\n        if (contributed == 0) return;\n        Team team = playerTeam[player];\n        uint256 index = uint256(team);\n        require(teamScores[index] >= contributed, \"Underflow\");\n        teamScores[index] -= contributed;\n        playerScores[player] = 0;\n        emit PlayerReset(player, team, contributed);\n    }\n\n    function getPlayerScore(address player) external view returns (uint256) {\n        return playerScores[player];\n    }\n\n    // Views\n    function getTeam(address player) external view returns (bool chosen, Team team) {\n        return (hasChosen[player], playerTeam[player]);\n    }\n\n    function getScores() external view returns (uint256 ethScore, uint256 btcScore, uint256 monadScore) {\n        return (teamScores[0], teamScores[1], teamScores[2]);\n    }\n\n    function getScore(Team team) external view returns (uint256) {\n        return teamScores[uint256(team)];\n    }\n}\n\n\n"
+      }
+    }
+  }
+}

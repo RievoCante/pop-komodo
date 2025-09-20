@@ -1,0 +1,134 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum PopKomodo.Team",
+        "name": "team",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newTeamScore",
+        "type": "uint256"
+      }
+    ],
+    "name": "Popped",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum PopKomodo.Team",
+        "name": "team",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "amount",
+        "type": "uint32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newTeamScore",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoppedBy",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum PopKomodo.Team",
+        "name": "team",
+        "type": "uint8"
+      }
+    ],
+    "name": "TeamChosen",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint32", "name": "amount", "type": "uint32" }
+    ],
+    "name": "popBy",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "enum PopKomodo.Team", "name": "team", "type": "uint8" }
+    ],
+    "name": "chooseTeam",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "enum PopKomodo.Team", "name": "team", "type": "uint8" }
+    ],
+    "name": "getScore",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getScores",
+    "outputs": [
+      { "internalType": "uint256", "name": "ethScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "btcScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "monadScore", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "player", "type": "address" }
+    ],
+    "name": "getTeam",
+    "outputs": [
+      { "internalType": "bool", "name": "chosen", "type": "bool" },
+      { "internalType": "enum PopKomodo.Team", "name": "team", "type": "uint8" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pop",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
